@@ -1,7 +1,7 @@
 plugins {
 	java
-	id("org.springframework.boot") version "4.1.2"
-	id("io.spring.dependency-management") version "1.1.7"
+	alias(libs.plugins.spring.boot)
+	alias(libs.plugins.spring.dependency.management)
 }
 
 group = "ru.mephi"
@@ -10,7 +10,7 @@ description = "Service discovery for the hotel booking system"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInt())
 	}
 }
 
@@ -18,15 +18,14 @@ repositories {
 	mavenCentral()
 }
 
-extra["springCloudVersion"] = "2025.1.4"
-
 dependencies {
-	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server")
+	implementation(libs.spring.cloud.starter.netflix.eureka.server)
 }
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+		val springCloudBom = libs.spring.cloud.bom.get()
+		mavenBom("${springCloudBom.group}:${springCloudBom.name}:${springCloudBom.versionConstraint.requiredVersion}")
 	}
 }
 
