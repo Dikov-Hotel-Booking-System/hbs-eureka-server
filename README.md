@@ -1,49 +1,84 @@
-# hbs-eureka-server
+# 🚀 Hbs-eureka-server
 
-Реестр сервисов Hotel Booking System.
+> Сервис регистрации и обнаружения приложений Hotel Booking System
 
-Проект сгенерирован через [Spring Initializr](https://start.spring.io): Java 21,
-Spring Boot 4.1.2, Spring Cloud 2025.1.4, Gradle Kotlin DSL. Group: `ru.mephi`,
-пакет: `ru.mephi.hbs.discovery`.
+---
 
-Зависимость: Eureka Server. Тестовые зависимости и шаблонный `contextLoads`
-удалены: приложение только включает стандартный сервер Eureka.
-Сервер включён через `@EnableEurekaServer` и настроен для одиночного запуска.
+## 📌 Описание
 
-```powershell
-.\gradlew.bat build
-.\gradlew.bat bootRun
-```
+Сервис запускает Eureka Server и хранит реестр зарегистрированных приложений.
+Настроен одиночный экземпляр реестра, без регистрации самого себя как клиента.
 
-Интерфейс Eureka: <http://localhost:8761/>. Запускайте реестр первым.
+---
 
-## Docker
+## 📘 Документация по процессам
 
-Исполняемый JAR всегда называется `build/libs/app.jar`; обычный библиотечный
-JAR не собирается. Сначала соберите JAR, затем образ:
+- ### [GitHub Flow](docs/github_flow/index.md)
 
-```powershell
+---
+
+## 🛠️ Стек технологий
+
+- ☕ Java 21 (язык разработки)
+- 🌱 Spring Boot 4.1.2 (основа приложения)
+- 🔎 Spring Cloud 2025.1.4 и Eureka Server (реестр сервисов)
+- 🐘 Gradle 9.5.1 с Kotlin DSL (сборка)
+- 🐳 Docker и GitHub Actions (сборка образа и CI)
+
+---
+
+## 🚀 Локальный запуск
+
+1. Убедиться, что установлена JDK 21 и доступен порт `8761`
+
+   Сервис не требует PostgreSQL или других приложений для запуска.
+
+2. Создать папку `config` в корне проекта и файл `config/application.yaml` с содержимым ниже
+   ```yaml
+   server:
+     port: 8761
+   ```
+
+   Локальный файл переопределяет значения из `src/main/resources/application.yaml`
+   через `spring.config.import: optional:file:./config/application.yaml`.
+   Папка `config` исключена из Git.
+
+   Если значения по умолчанию подходят, локальный файл можно не создавать.
+
+3. Из корня проекта выполнить команду
+   ```shell
+   .\gradlew.bat bootRun
+   ```
+
+   Порт приложения по умолчанию: `8761`. Его можно изменить в локальном файле настроек.
+
+---
+
+## 📦 Сборка JAR и Docker-образа
+
+```shell
 .\gradlew.bat bootJar
 docker build --tag hbs-eureka-server:local .
 ```
 
-Dockerfile использует JRE 21 и запускает приложение от UID/GID `10001:10001`.
-В образ копируется уже собранный JAR.
+Исполняемый JAR находится в `build/libs/app.jar`. Dockerfile использует JRE 21
+и запускает приложение от пользователя `10001:10001`.
 
-## GitHub Actions
+---
 
-Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) запускается
-при push в `master` и `feature/**`, для PR в `master`
-и вручную через `workflow_dispatch`. Содержимое workflow одинаково
-во всех четырёх репозиториях.
+## 🔗 Полезные ссылки
 
-Рабочий поток: `feature/<name>` → PR → `master`.
-Проверка `Branch policy` отклоняет PR из других исходных веток.
-Правила защиты для GitHub и порядок первоначальной настройки описаны
-в [GitHub Flow](docs/github_flow/index.md).
+| Ссылка | Примечание |
+|--------|------------|
+| [Репозиторий](https://github.com/Dikov-Hotel-Booking-System/hbs-eureka-server) | Исходный код сервиса |
+| [GitHub Actions](https://github.com/Dikov-Hotel-Booking-System/hbs-eureka-server/actions) | Запуски CI |
+| [Eureka](http://localhost:8761/) | Открывать после локального запуска сервиса |
 
-1. `build` выполняет `test bootJar`: собирает JAR; задача тестирования получает `NO-SOURCE`.
-2. `docker` получает тот же JAR через artifact и собирает образ с тегом SHA коммита.
+---
 
-Готовый JAR сохраняется в artifacts на 7 дней. Образ проверяется сборкой,
-без публикации в registry. Деплоя и Kubernetes-манифестов нет.
+## 🧪 Тестирование сервиса
+
+Тестовых зависимостей и тестовых классов в сервисе нет.
+В общем CI задача `test` завершается с `NO-SOURCE`.
+
+---

@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: optional:file:./config/application.yaml
+  application:
+    name: hbs-eureka-server
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
